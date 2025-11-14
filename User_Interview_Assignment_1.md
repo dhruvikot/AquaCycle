@@ -12,16 +12,14 @@ Our goal was to understand how the current Food Waste Collection app works, the 
 ## 2. Participants
 | Name | Role | Organization |
 |------|------|--------------|
-| **Arturo Torres Torres Landa** | Team Lead & Developer | Miller Center for Global Impact / Frugal Lab |
+| **Arturo Torres Torres Landa** | Team Lead & Developer |Frugal Lab |
 | **Allan Báez** | Lab Manager | Frugal Innovation Lab |
 | **Our Team** | Interviewers | SCU – Computing for Good |
 
 ---
 
 ## 3. Interview Details
-- **Date:** Thursday, Nov 13, 2024  
-- **Time:** 1:00 – 1:30 PM  
-- **Mode:** Google Meet  
+- **Date:** Thursday, Nov 6, 2024   
 - **Context:** The Food Waste Collection app is already deployed and used by NGOs. Our task is to identify opportunities for AI features without breaking the existing system.
 
 ---
@@ -67,7 +65,6 @@ Keep improvements lightweight. Avoid breaking the existing live version. AI feat
 ---
 
 ## 5. Additional Insight from the Provided Project Summary (CSEN_269 Summary)
-Based on the `Summary_CSEN_269.pdf`:
 
 - Donor onboarding is a bottleneck — many donors need help understanding the process.  
 - Coordinators rely on WhatsApp or calls when the app lacks clarity.  
@@ -135,14 +132,12 @@ This helps coordinators plan faster.
 
 ---
 
-## 9. Appendix: Email Communication Timeline  
-(For transparency and assignment requirements)
 
 ### **Outreach → Scheduling → Confirmation**
 - Oct 27: Email to Allan to schedule Loom interviews  
 - Oct 31: Allan connected team with Arturo  
 - Nov 3–10: Email coordination for meeting  
-- Nov 13: Meeting confirmed → Interview conducted
+- Nov 6: Meeting confirmed → Interview conducted
 
 Emails included:  
 - Request for repo  
@@ -157,6 +152,6 @@ Emails included:
 **Prepared by:**  
 Yash Pokharna  
 Dhruvi Kothari  
-Dhruv Shah  
+Dhruv Savla  
 MSCS Candidates, Santa Clara University
 
