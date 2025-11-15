@@ -37,3 +37,4 @@ yarn-error.*
 # Internal documentation (not for repository)
 SAFETY_CONFIRMATION.md
 TEST_DATA_SUMMARY.md
+CREDENTIALS_INTERNAL.md

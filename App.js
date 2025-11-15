@@ -69,7 +69,7 @@ const LoginPage = ({ navigation }) => {
     } else {
       Alert.alert(
         'Login Failed',
-        'Invalid username or password.\n\nDemo Credentials:\nUsername: demo, Password: demo123\nUsername: admin, Password: admin123\nUsername: test, Password: test123'
+        'Invalid username or password. Please contact your administrator for access.'
       );
     }
   };
@@ -108,16 +108,6 @@ const LoginPage = ({ navigation }) => {
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
-
-        <View style={styles.demoCredentialsBox}>
-          <Text style={styles.demoCredentialsTitle}>Demo Credentials (6 users):</Text>
-          <Text style={styles.demoCredentialsText}>• demo / demo123</Text>
-          <Text style={styles.demoCredentialsText}>• admin / admin123</Text>
-          <Text style={styles.demoCredentialsText}>• test / test123</Text>
-          <Text style={styles.demoCredentialsText}>• maria / maria123</Text>
-          <Text style={styles.demoCredentialsText}>• john / john123</Text>
-          <Text style={styles.demoCredentialsText}>• sarah / sarah123</Text>
-        </View>
       </View>
     </View>
   );
@@ -223,25 +213,6 @@ const styles = StyleSheet.create({
     color: '#1976d2',
     fontWeight: 'bold',
     fontSize: 14,
-  },
-  demoCredentialsBox: {
-    marginTop: 25,
-    padding: 15,
-    backgroundColor: '#f0f7ff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#b3d9ff',
-  },
-  demoCredentialsTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#1976d2',
-  },
-  demoCredentialsText: {
-    fontSize: 13,
-    color: '#555',
-    marginVertical: 2,
   },
   homeContainer: {
     flex: 1,
