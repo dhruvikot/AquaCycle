@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Internal documentation (not for repository)
+SAFETY_CONFIRMATION.md
+TEST_DATA_SUMMARY.md
