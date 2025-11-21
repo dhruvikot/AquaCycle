@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert, Linking } from 'react-native';
 import Receptor from './components/receptor';
 import Classify from './components/classify';
 import PastCollections from './components/pastcollections';
@@ -11,13 +11,84 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 // Create a context to manage the logged-in user
 const UserContext = createContext();
 
-// Home component with three buttons
+// Home component - routes to appropriate home based on role
 const Home = ({ navigation }) => {
+  const { user } = useContext(UserContext);
+
+  if (user?.role === 'admin') {
+    return <AdminHome navigation={navigation} />;
+  }
+  return <DriverHome navigation={navigation} />;
+};
+
+// Admin Home component
+const AdminHome = ({ navigation }) => {
+  const { user } = useContext(UserContext);
+  const ADMIN_URL = 'http://localhost:5173'; // Update this with your admin app URL
+
+  const openAdminPanel = async () => {
+    try {
+      const supported = await Linking.canOpenURL(ADMIN_URL);
+      if (supported) {
+        await Linking.openURL(ADMIN_URL);
+      } else {
+        Alert.alert(
+          'Cannot Open Admin Panel',
+          'Please ensure the admin web application is running on ' + ADMIN_URL
+        );
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to open admin panel: ' + error.message);
+    }
+  };
+
+  return (
+    <View style={styles.homeContainer}>
+      <Text style={styles.welcomeText}>Welcome, {user?.name}</Text>
+      <Text style={styles.roleText}>Administrator</Text>
+      
+      <TouchableOpacity
+        style={[styles.homeButton, styles.adminButton]}
+        onPress={openAdminPanel}
+      >
+        <Text style={styles.buttonText}>Open Admin Panel</Text>
+      </TouchableOpacity>
+
+      <View style={styles.divider}>
+        <Text style={styles.dividerText}>Driver Functions</Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('Collect')}
+      >
+        <Text style={styles.buttonText}>Collect</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('Classify')}
+      >
+        <Text style={styles.buttonText}>Classify</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('PastCollections')}
+      >
+        <Text style={styles.buttonText}>Past Collections</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+// Driver Home component
+const DriverHome = ({ navigation }) => {
   const { user } = useContext(UserContext);
 
   return (
     <View style={styles.homeContainer}>
-      <Text style={styles.welcomeText}>Welcome, {user}</Text>
+      <Text style={styles.welcomeText}>Welcome, {user?.name}</Text>
+      <Text style={styles.roleText}>Driver</Text>
+      
       <TouchableOpacity
         style={styles.homeButton}
         onPress={() => navigation.navigate('Collect')}
@@ -47,14 +118,14 @@ const LoginPage = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [isDemoMode, setIsDemoMode] = useState(true); // Start in demo mode
 
-  // Demo credentials
+  // Demo credentials with roles
   const demoCredentials = [
-    { username: 'demo', password: 'demo123', name: 'Demo User' },
-    { username: 'admin', password: 'admin123', name: 'Admin User' },
-    { username: 'test', password: 'test123', name: 'Test User' },
-    { username: 'maria', password: 'maria123', name: 'Maria Rodriguez' },
-    { username: 'john', password: 'john123', name: 'John Smith' },
-    { username: 'sarah', password: 'sarah123', name: 'Sarah Johnson' }
+    { username: 'demo', password: 'demo123', name: 'Demo User', role: 'driver' },
+    { username: 'admin', password: 'admin123', name: 'Admin User', role: 'admin' },
+    { username: 'test', password: 'test123', name: 'Test User', role: 'driver' },
+    { username: 'maria', password: 'maria123', name: 'Maria Rodriguez', role: 'driver' },
+    { username: 'john', password: 'john123', name: 'John Smith', role: 'driver' },
+    { username: 'sarah', password: 'sarah123', name: 'Sarah Johnson', role: 'driver' }
   ];
 
   const handleLogin = () => {
@@ -64,7 +135,7 @@ const LoginPage = ({ navigation }) => {
     );
 
     if (validUser) {
-      setUser(validUser.name);
+      setUser(validUser);
       navigation.navigate('Home');
     } else {
       Alert.alert(
@@ -233,7 +304,32 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 20,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  roleText: {
+    fontSize: 16,
     marginBottom: 20,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  adminButton: {
+    backgroundColor: '#4CAF50',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  divider: {
+    width: '80%',
+    paddingVertical: 10,
+    marginVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+  },
+  dividerText: {
+    textAlign: 'center',
+    color: '#666',
+    fontSize: 14,
+    marginTop: 10,
   },
 });
 
