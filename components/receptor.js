@@ -5,6 +5,7 @@ import DropdownSection from './picker';
 import Entry from './entry';
 import Dashboard from './dashboard';
 import calls from '../services/calls';
+import VoiceAssistant from './voiceAssistant';
 
 const Receptor = ({ route, navigation }) => {
     const [entries, setEntries] = useState([]);
@@ -224,6 +225,16 @@ const Receptor = ({ route, navigation }) => {
                 onAdd={handleAddEntry}
                 selectedClient={selectedClient}
                 selectedLocation={selectedLocation}
+            />
+            <VoiceAssistant
+                clients={clients}
+                selectedClient={selectedClient}
+                selectedLocation={selectedLocation}
+                onClientSelect={setSelectedClient}
+                onLocationSelect={setSelectedLocation}
+                onAddEntry={handleAddEntry}
+                onSubmit={handleSubmit}
+                setNotes={setNotes}
             />
             <Dashboard
                 entries={entries}
