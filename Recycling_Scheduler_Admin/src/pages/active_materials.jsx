@@ -1,37 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import NavigationWrapper from '../components/Navigation/NavigationWrapper';
+import { MATERIALS_LIST, getMaterialsByCategory } from '../../../shared/materials';
 
 const ActiveMaterials = () => {
-    // Materials matching the classify component
-    const [materials, setMaterials] = useState([
-        { id: 1, name: 'PET Cristal', category: 'Plásticos' },
-        { id: 2, name: 'PET Verde', category: 'Plásticos' },
-        { id: 3, name: 'PET Bandejas', category: 'Plásticos' },
-        { id: 4, name: 'Polietileno Botella', category: 'Plásticos' },
-        { id: 5, name: 'Nylon Transparente', category: 'Plásticos' },
-        { id: 6, name: 'Nylon Color', category: 'Plásticos' },
-        { id: 7, name: 'Papel Blanco', category: 'Papel y Cartón' },
-        { id: 8, name: 'Revista/Diario', category: 'Papel y Cartón' },
-        { id: 9, name: 'Cartón Corrugado', category: 'Papel y Cartón' },
-        { id: 10, name: 'Aluminio', category: 'Metales' },
-        { id: 11, name: 'Chatarra', category: 'Metales' },
-        { id: 12, name: 'Electrónicos', category: 'Otros' },
-        { id: 13, name: 'Vidrio', category: 'Vidrio' },
-        { id: 14, name: 'Tetrabrik', category: 'Otros' },
-        { id: 15, name: 'Poliestireno Expandido', category: 'Plásticos' },
-        { id: 16, name: 'PP (5)', category: 'Plásticos' },
-        { id: 17, name: 'Poliestireno PS (6)', category: 'Plásticos' },
-        { id: 18, name: 'Descarte', category: 'Descarte' },
-    ]);
+    // Get materials from shared configuration
+    const [materials, setMaterials] = useState(MATERIALS_LIST);
 
     // Group materials by category
-    const groupedMaterials = materials.reduce((acc, material) => {
-        if (!acc[material.category]) {
-            acc[material.category] = [];
-        }
-        acc[material.category].push(material);
-        return acc;
-    }, {});
+    const groupedMaterials = getMaterialsByCategory();
 
     return (
         <NavigationWrapper>
@@ -62,8 +38,8 @@ const ActiveMaterials = () => {
                         ))}
                     </div>
 
-                    <div className="mt-4 p-4 bg-blue-100 border border-blue-300 rounded-lg text-sm text-blue-800">
-                        <strong>Nota:</strong> Esta lista coincide con los materiales disponibles en la función de clasificación de la aplicación móvil.
+                    <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-lg text-sm text-green-800">
+                        <strong>✓ Sincronizado en tiempo real:</strong> Esta lista se comparte automáticamente con la aplicación móvil desde <code>shared/materials.js</code>. Cualquier cambio en el archivo compartido se reflejará en ambas aplicaciones.
                     </div>
                 </div>
             </div>

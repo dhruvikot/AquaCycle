@@ -1,6 +1,8 @@
 // LOCAL DEMO DATABASE - No production data touched!
 // This simulates a local database for testing and demo purposes
 
+import { getClientsForDriverApp } from '../shared/clients';
+
 let localData = {
     users: [
         { id: 1, first_name: 'Demo', last_name: 'User', email: 'demo@example.com', phone: '555-1000' },
@@ -10,89 +12,13 @@ let localData = {
         { id: 5, first_name: 'John', last_name: 'Smith', email: 'john.smith@waste.com', phone: '555-5002' },
         { id: 6, first_name: 'Sarah', last_name: 'Johnson', email: 'sarah.j@eco.org', phone: '555-6003' }
     ],
-    clients: [
-        {
-            id: 1,
-            client_name: 'EcoRecycle Center',
-            contact_email: 'contact@ecorecycle.com',
-            contact_phone: '555-0101',
-            first_name: 'Carlos',
-            last_name: 'Mendez',
-            locations: [
-                { id: 1, name: 'Downtown Branch' },
-                { id: 2, name: 'North Branch' },
-                { id: 3, name: 'West Side Office' }
-            ]
-        },
-        {
-            id: 2,
-            client_name: 'Green Solutions Inc',
-            contact_email: 'info@greensolutions.com',
-            contact_phone: '555-0202',
-            first_name: 'Ana',
-            last_name: 'Garcia',
-            locations: [
-                { id: 4, name: 'Main Warehouse' },
-                { id: 5, name: 'South Facility' },
-                { id: 6, name: 'Industrial Park' }
-            ]
-        },
-        {
-            id: 3,
-            client_name: 'Urban Waste Management',
-            contact_email: 'urban@wastemt.com',
-            contact_phone: '555-0303',
-            first_name: 'Roberto',
-            last_name: 'Silva',
-            locations: [
-                { id: 7, name: 'Central Station' },
-                { id: 8, name: 'East Hub' }
-            ]
-        },
-        {
-            id: 4,
-            client_name: 'Montevideo Recycling Co',
-            contact_email: 'info@montevideorecycling.uy',
-            contact_phone: '555-0404',
-            first_name: 'Patricia',
-            last_name: 'Lopez',
-            locations: [
-                { id: 9, name: 'Pocitos Collection Point' },
-                { id: 10, name: 'Ciudad Vieja Center' },
-                { id: 11, name: 'Carrasco Facility' }
-            ]
-        },
-        {
-            id: 5,
-            client_name: 'Plaza Independencia Offices',
-            contact_email: 'admin@plazaindep.com',
-            contact_phone: '555-0505',
-            first_name: 'Luis',
-            last_name: 'Fernandez',
-            locations: [
-                { id: 12, name: 'Floor 3 - Office Complex' },
-                { id: 13, name: 'Floor 8 - Corporate' }
-            ]
-        },
-        {
-            id: 6,
-            client_name: 'Coastal Waste Services',
-            contact_email: 'contact@coastalwaste.uy',
-            contact_phone: '555-0606',
-            first_name: 'Elena',
-            last_name: 'Martinez',
-            locations: [
-                { id: 14, name: 'Punta Carretas Depot' },
-                { id: 15, name: 'Malvin Processing Center' }
-            ]
-        }
-    ],
+    clients: getClientsForDriverApp(), // Now using shared clients from shared/clients.js
     pickups: [
         {
             id: 1,
             client: 1,
-            client_data: { id: 1, client_name: 'EcoRecycle Center' },
-            location: 'Downtown Branch',
+            client_data: { id: 1, client_name: 'Hotel Plaza' },
+            location: 'Edificio Principal',
             location_id: 1,
             datetime: new Date().toISOString(),
             total_weight: 50,
@@ -107,9 +33,9 @@ let localData = {
         {
             id: 2,
             client: 2,
-            client_data: { id: 2, client_name: 'Green Solutions Inc' },
-            location: 'Main Warehouse',
-            location_id: 4,
+            client_data: { id: 2, client_name: 'Restaurante El Parador' },
+            location: 'Sede Principal',
+            location_id: 3,
             datetime: new Date(Date.now() - 86400000).toISOString(),
             total_weight: 75,
             status: 'C',
@@ -126,9 +52,9 @@ let localData = {
         {
             id: 3,
             client: 3,
-            client_data: { id: 3, client_name: 'Urban Waste Management' },
-            location: 'Central Station',
-            location_id: 7,
+            client_data: { id: 3, client_name: 'Supermercado Central' },
+            location: 'Depósito Principal',
+            location_id: 4,
             datetime: new Date(Date.now() - 172800000).toISOString(),
             total_weight: 120,
             status: 'C',
@@ -146,13 +72,13 @@ let localData = {
         {
             id: 4,
             client: 4,
-            client_data: { id: 4, client_name: 'Montevideo Recycling Co' },
-            location: 'Pocitos Collection Point',
-            location_id: 9,
+            client_data: { id: 4, client_name: 'Oficinas Torre Libertador' },
+            location: 'Torre Principal',
+            location_id: 6,
             datetime: new Date(Date.now() - 259200000).toISOString(),
             total_weight: 85,
             status: 'C',
-            notes: 'Residential area pickup - High volume day',
+            notes: 'Office paper and recyclables collection',
             bags: [
                 { id: 7, color: 'Blue', weight: 40 },
                 { id: 8, color: 'Yellow', weight: 25 },
@@ -168,13 +94,13 @@ let localData = {
         {
             id: 5,
             client: 5,
-            client_data: { id: 5, client_name: 'Plaza Independencia Offices' },
-            location: 'Floor 3 - Office Complex',
-            location_id: 12,
+            client_data: { id: 5, client_name: 'Fábrica Textil Del Sur' },
+            location: 'Planta de Producción',
+            location_id: 7,
             datetime: new Date(Date.now() - 345600000).toISOString(),
             total_weight: 42,
             status: 'P',
-            notes: 'Office waste - Weekly collection',
+            notes: 'Industrial fabric waste collection',
             bags: [
                 { id: 10, color: 'Blue', weight: 22 },
                 { id: 11, color: 'Yellow', weight: 20 }
@@ -183,14 +109,14 @@ let localData = {
         },
         {
             id: 6,
-            client: 6,
-            client_data: { id: 6, client_name: 'Coastal Waste Services' },
-            location: 'Punta Carretas Depot',
-            location_id: 14,
+            client: 1,
+            client_data: { id: 1, client_name: 'Hotel Plaza' },
+            location: 'Cocina',
+            location_id: 2,
             datetime: new Date(Date.now() - 432000000).toISOString(),
             total_weight: 195,
             status: 'C',
-            notes: 'Large industrial collection - Mixed materials',
+            notes: 'Kitchen organic waste collection',
             bags: [
                 { id: 12, color: 'Blue', weight: 80 },
                 { id: 13, color: 'Green', weight: 65 },
@@ -206,14 +132,14 @@ let localData = {
         },
         {
             id: 7,
-            client: 1,
-            client_data: { id: 1, client_name: 'EcoRecycle Center' },
-            location: 'North Branch',
-            location_id: 2,
+            client: 3,
+            client_data: { id: 3, client_name: 'Supermercado Central' },
+            location: 'Área de Carga',
+            location_id: 5,
             datetime: new Date(Date.now() - 518400000).toISOString(),
             total_weight: 68,
             status: 'C',
-            notes: 'North zone collection - Good separation quality',
+            notes: 'Loading area cardboard and packaging',
             bags: [
                 { id: 15, color: 'Blue', weight: 35 },
                 { id: 16, color: 'Green', weight: 33 }
@@ -226,14 +152,14 @@ let localData = {
         },
         {
             id: 8,
-            client: 4,
-            client_data: { id: 4, client_name: 'Montevideo Recycling Co' },
-            location: 'Ciudad Vieja Center',
-            location_id: 10,
+            client: 5,
+            client_data: { id: 5, client_name: 'Fábrica Textil Del Sur' },
+            location: 'Depósito de Materiales',
+            location_id: 8,
             datetime: new Date(Date.now() - 604800000).toISOString(),
             total_weight: 110,
             status: 'P',
-            notes: 'Old city collection - Awaiting classification',
+            notes: 'Material warehouse collection - Awaiting classification',
             bags: [
                 { id: 17, color: 'Blue', weight: 55 },
                 { id: 18, color: 'Yellow', weight: 35 },
@@ -244,13 +170,13 @@ let localData = {
         {
             id: 9,
             client: 2,
-            client_data: { id: 2, client_name: 'Green Solutions Inc' },
-            location: 'Industrial Park',
-            location_id: 6,
+            client_data: { id: 2, client_name: 'Restaurante El Parador' },
+            location: 'Sede Principal',
+            location_id: 3,
             datetime: new Date(Date.now() - 691200000).toISOString(),
             total_weight: 230,
             status: 'C',
-            notes: 'Industrial waste pickup - Heavy materials',
+            notes: 'Restaurant waste - High organic content',
             bags: [
                 { id: 20, color: 'Blue', weight: 90 },
                 { id: 21, color: 'Yellow', weight: 70 },
@@ -265,14 +191,14 @@ let localData = {
         },
         {
             id: 10,
-            client: 3,
-            client_data: { id: 3, client_name: 'Urban Waste Management' },
-            location: 'East Hub',
-            location_id: 8,
+            client: 4,
+            client_data: { id: 4, client_name: 'Oficinas Torre Libertador' },
+            location: 'Torre Principal',
+            location_id: 6,
             datetime: new Date(Date.now() - 777600000).toISOString(),
             total_weight: 92,
             status: 'C',
-            notes: 'East zone pickup - Mixed residential waste',
+            notes: 'Office tower collection - Paper and recyclables',
             bags: [
                 { id: 23, color: 'Blue', weight: 45 },
                 { id: 24, color: 'Yellow', weight: 27 },

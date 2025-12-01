@@ -25,6 +25,10 @@ const router = createBrowserRouter([
     element: <UsersPage />,
   },
   {
+    path: "/materials",
+    element: <ActiveMaterials />,
+  },
+  {
     path: "/statistic-reports",
     element: <StatisticReports />,
   }  

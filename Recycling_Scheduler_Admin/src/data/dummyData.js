@@ -1,5 +1,7 @@
 // Dummy data for the admin panel (replaces Firebase)
 
+import { getClientsForAdmin } from '../../../shared/clients';
+
 export const dummyUsers = [
   {
     id: '1',
@@ -33,101 +35,70 @@ export const dummyUsers = [
   },
 ];
 
-export const dummyClients = [
-  {
-    id: 'client-1',
-    client_name: 'Hotel Plaza',
-    pickup_frequency: 'Lun Mar Mié Jue Vie',
-    contact_name: 'Pedro Gonzalez',
-    contact_email: 'pedro@hotelplaza.com',
-    contact_phone: '+598-99-123-456',
-    locations: [
-      {
-        id: 'loc-1-1',
-        name: 'Edificio Principal',
-        address: 'Av. 18 de Julio 1234, Montevideo',
-        contact_name: 'Pedro Gonzalez',
-        contact_phone: '+598-99-123-456',
-      },
-      {
-        id: 'loc-1-2',
-        name: 'Cocina',
-        address: 'Av. 18 de Julio 1234, Montevideo - Piso 2',
-        contact_name: 'Maria Lopez',
-        contact_phone: '+598-99-123-457',
-      },
-    ],
-  },
-  {
-    id: 'client-2',
-    client_name: 'Restaurante El Parador',
-    pickup_frequency: 'Lun Mié Vie',
-    contact_name: 'Laura Fernandez',
-    contact_email: 'laura@elparador.com',
-    contact_phone: '+598-99-234-567',
-    locations: [
-      {
-        id: 'loc-2-1',
-        name: 'Sede Principal',
-        address: 'Rambla República del Perú 999, Montevideo',
-        contact_name: 'Laura Fernandez',
-        contact_phone: '+598-99-234-567',
-      },
-    ],
-  },
-  {
-    id: 'client-3',
-    client_name: 'Supermercado Central',
-    pickup_frequency: 'Mar Jue Sáb',
-    contact_name: 'Roberto Silva',
-    contact_email: 'roberto@supercentral.com',
-    contact_phone: '+598-99-345-678',
-    locations: [
-      {
-        id: 'loc-3-1',
-        name: 'Depósito Principal',
-        address: 'Bulevar Artigas 567, Montevideo',
-        contact_name: 'Roberto Silva',
-        contact_phone: '+598-99-345-678',
-      },
-      {
-        id: 'loc-3-2',
-        name: 'Área de Carga',
-        address: 'Bulevar Artigas 567, Montevideo - Lateral',
-        contact_name: 'Diego Torres',
-        contact_phone: '+598-99-345-679',
-      },
-    ],
-  },
-];
+// Now using shared clients from shared/clients.js for consistency
+export const dummyClients = getClientsForAdmin();
 
 // Generate collections for the current year and previous months
 const generateCollectionsForYear = (year) => {
   const collections = [];
-  const clients = ['client-1', 'client-2', 'client-3'];
+  
+  // Client configurations with realistic waste profiles
+  const clientConfigs = [
+    {
+      id: 'client-1', // Hotel Plaza
+      locationNames: ['Edificio Principal', 'Cocina'],
+      collectionsPerMonth: 4, // High frequency
+      wasteProfile: { papel_carton: 25, plasticos: 20, organico: 45, otros: 8, descarte: 15 }
+    },
+    {
+      id: 'client-2', // Restaurante El Parador
+      locationNames: ['Sede Principal'],
+      collectionsPerMonth: 3, // Medium-high frequency
+      wasteProfile: { papel_carton: 15, plasticos: 18, organico: 60, otros: 5, descarte: 12 }
+    },
+    {
+      id: 'client-3', // Supermercado Central
+      locationNames: ['Depósito Principal', 'Área de Carga'],
+      collectionsPerMonth: 3, // Medium frequency
+      wasteProfile: { papel_carton: 40, plasticos: 35, organico: 30, otros: 10, descarte: 20 }
+    },
+    {
+      id: 'client-4', // Oficinas Torre Libertador
+      locationNames: ['Torre Principal'],
+      collectionsPerMonth: 2, // Low frequency
+      wasteProfile: { papel_carton: 50, plasticos: 15, organico: 8, otros: 12, descarte: 8 }
+    },
+    {
+      id: 'client-5', // Fábrica Textil Del Sur
+      locationNames: ['Planta de Producción', 'Depósito de Materiales'],
+      collectionsPerMonth: 4, // High frequency
+      wasteProfile: { papel_carton: 35, plasticos: 30, organico: 10, otros: 15, descarte: 25 }
+    }
+  ];
   
   // Generate data for each month (0-11 for Jan-Dec)
   for (let month = 0; month < 12; month++) {
-    clients.forEach((clientId, clientIndex) => {
-      // Generate 2-4 collections per month per client
-      const collectionsPerMonth = 2 + Math.floor(Math.random() * 3);
-      
-      for (let i = 0; i < collectionsPerMonth; i++) {
+    clientConfigs.forEach((config, clientIndex) => {
+      // Generate collections per month based on client configuration
+      for (let i = 0; i < config.collectionsPerMonth; i++) {
         const day = 5 + (i * 7); // Spread throughout the month
         const date = new Date(year, month, Math.min(day, 28), 10 + i * 2, 0, 0);
         
+        // Randomly select a location for this client
+        const location = config.locationNames[Math.floor(Math.random() * config.locationNames.length)];
+        
         collections.push({
           id: `coll-${year}-${month}-${clientIndex}-${i}`,
-          clientId: clientId,
+          clientId: config.id,
           timeStamp: date,
           createdAt: date,
-          location: clientIndex === 0 ? 'Edificio Principal' : clientIndex === 1 ? 'Sede Principal' : 'Depósito Principal',
+          location: location,
           collections: [
-            { materialId: 'papel_carton', weight: 15 + Math.random() * 30 },
-            { materialId: 'plasticos', weight: 10 + Math.random() * 25 },
-            { materialId: 'organico', weight: 30 + Math.random() * 60 },
-            { materialId: 'otros', weight: 2 + Math.random() * 10 },
-            { materialId: 'descarte', weight: 3 + Math.random() * 12 },
+            { materialId: 'papel_carton', weight: config.wasteProfile.papel_carton + Math.random() * 20 },
+            { materialId: 'plasticos', weight: config.wasteProfile.plasticos + Math.random() * 15 },
+            { materialId: 'organico', weight: config.wasteProfile.organico + Math.random() * 25 },
+            { materialId: 'otros', weight: config.wasteProfile.otros + Math.random() * 8 },
+            { materialId: 'descarte', weight: config.wasteProfile.descarte + Math.random() * 10 },
           ],
         });
       }

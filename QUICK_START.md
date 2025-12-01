@@ -84,6 +84,7 @@ After starting:
 
 ## ⚙️ Configuration
 
+### Admin Panel URL
 To change the admin panel URL (for production or different port):
 
 Edit `App.js`, line 27:
@@ -91,7 +92,34 @@ Edit `App.js`, line 27:
 const ADMIN_URL = 'http://localhost:5173'; // Change this
 ```
 
+### 🔄 Shared Materials Configuration
+Both the driver app and admin panel now use a **single source of truth** for materials:
+
+**Location:** `shared/materials.js`
+
+**Features:**
+- ✓ Real-time sync between driver app and admin panel
+- ✓ 18 material types across 5 categories
+- ✓ Consistent naming and categorization
+- ✓ Helper functions for easy access
+
+**To add/modify materials:**
+1. Edit `shared/materials.js`
+2. Update the `MATERIALS_LIST` array
+3. Both apps will automatically use the new materials
+
+**Example:**
+```javascript
+{ 
+  id: 19, 
+  name: 'New Material', 
+  category: 'Plásticos', 
+  weight: 0, 
+  color: '#ffc000' 
+}
+```
+
 ## 📚 More Information
 
-See `INTEGRATION_GUIDE.md` for detailed documentation.
+See individual README files for detailed documentation.
 

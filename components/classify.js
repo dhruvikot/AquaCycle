@@ -5,30 +5,12 @@ import Header from './header';
 import RNPickerSelect from 'react-native-picker-select';
 import calls from '../services/calls';
 import styles from './styles';
+import { MATERIALS_LIST } from '../shared/materials';
 
 const Classify = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const [materials, setMaterials] = useState([
-    { id: 1, name: 'PET Cristal', weight: 0, color: '#ffc000' },
-    { id: 2, name: 'PET Verde', weight: 0, color: '#ffc000' },
-    { id: 3, name: 'PET Bandejas', weight: 0, color: '#ffc000' },
-    { id: 4, name: 'Polietileno Botella', weight: 0, color: '#7f6000' },
-    { id: 5, name: 'Nylon Transparente', weight: 0, color: '#4a86e8' },
-    { id: 6, name: 'Nylon Color', weight: 0, color: '#4a86e8' },
-    { id: 7, name: 'Papel Blanco', weight: 0, color: '#4a86e8' },
-    { id: 8, name: 'Revista/Diario', weight: 0, color: '#7f6000' },
-    { id: 9, name: 'Cartón Corrugado', weight: 0, color: '#4a86e8' },
-    { id: 10, name: 'Aluminio', weight: 0, color: '#ffc000' },
-    { id: 11, name: 'Chatarra', weight: 0, color: '#7f6000' },
-    { id: 12, name: 'Electrónicos', weight: 0, color: 'grey' },
-    { id: 13, name: 'Vidrio', weight: 0, color: '#7f6000' },
-    { id: 14, name: 'Tetrabrik', weight: 0, color: '#7f6000' },
-    { id: 15, name: 'Poliestireno Expandido', weight: 0, color: '#7f6000' },
-    { id: 16, name: 'PP (5)', weight: 0, color: '#ffc000' },
-    { id: 17, name: 'Poliestireno PS (6)', weight: 0, color: '#ffc000' },
-    { id: 18, name: 'Descarte', weight: 0, color: 'grey' },
-  ]);
+  const [materials, setMaterials] = useState(MATERIALS_LIST);
   const [totalWeight, setTotalWeight] = useState(0);
   const [totalWeightFromSelectedPickup, setTotalWeightFromSelectedPickup] = useState(0);
   const [comment, setComment] = useState('');
