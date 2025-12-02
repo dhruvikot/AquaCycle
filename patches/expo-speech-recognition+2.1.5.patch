@@ -1,0 +1,40 @@
+diff --git a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.types.d.ts b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.types.d.ts
+index 5f023a3..88933d1 100644
+--- a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.types.d.ts
++++ b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.types.d.ts
+@@ -1,5 +1,5 @@
+ import type { PermissionResponse } from "expo-modules-core";
+-import type { NativeModule } from "expo";
++import type { NativeModule } from "expo-modules-core";
+ export type ExpoSpeechRecognitionPermissionResponse = PermissionResponse & {
+     /**
+      * Whether the speech recognition is restricted by Content & Privacy Restrictions.
+diff --git a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.d.ts b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.d.ts
+index 1b02874..83445b6 100644
+--- a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.d.ts
++++ b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.d.ts
+@@ -1,5 +1,6 @@
+ import type { EventSubscription, PermissionResponse } from "expo-modules-core";
+-import { NativeModule } from "expo";
++import { NativeModule } from "expo-modules-core";
++declare const registerWebModule: <T extends NativeModule<any>>(Module: new () => T, moduleName: string) => T;
+ import type { ExpoSpeechRecognitionNativeEventMap, ExpoSpeechRecognitionNativeEvents, ExpoSpeechRecognitionOptions } from "./ExpoSpeechRecognitionModule.types";
+ type NativeEventListener = (event: SpeechRecognitionEventMap[keyof SpeechRecognitionEventMap]) => void;
+ declare class ExpoSpeechRecognitionModuleWeb extends NativeModule<ExpoSpeechRecognitionNativeEvents> {
+diff --git a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.js b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.js
+index d7df9f4..942f7c6 100644
+--- a/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.js
++++ b/node_modules/expo-speech-recognition/build/ExpoSpeechRecognitionModule.web.js
+@@ -1,4 +1,9 @@
+-import { registerWebModule, NativeModule } from "expo";
++import { NativeModule } from "expo-modules-core";
++const registerWebModule = (Module, moduleName) => {
++    const instance = new Module();
++    globalThis.expo = globalThis.expo ?? {};
++    globalThis.expo.modules = globalThis.expo.modules ?? {};
++    globalThis.expo.modules[moduleName] = instance;
++    return instance;
++};
+ let _speechRecognitionRef = null;
+ // It loads the native module object from the JSI or falls back to
+ // the bridge module (from NativeModulesProxy) if the remote debugger is on.
