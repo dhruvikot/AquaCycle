@@ -245,13 +245,24 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     infoContainer: {
-        padding: 10,
-        backgroundColor: 'lightgrey',
-        marginBottom: 10,
+        padding: 16,
+        backgroundColor: '#E0F2FE',
+        marginBottom: 12,
+        marginHorizontal: 12,
+        borderRadius: 12,
+        borderWidth: 1.5,
+        borderColor: '#0EA5E9',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     infoText: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '600',
+        color: '#1A1A1A',
+        marginBottom: 4,
     },
 });
 

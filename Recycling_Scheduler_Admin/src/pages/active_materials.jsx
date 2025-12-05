@@ -1,13 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import NavigationWrapper from '../components/Navigation/NavigationWrapper';
 import { MATERIALS_LIST, getMaterialsByCategory } from '../../../shared/materials';
+import AddMaterialPopup from '../components/Popups/AddMaterialPopup';
+import EditMaterialPopup from '../components/Popups/EditMaterialPopup';
+import editIcon from '../images/edit_icon.png';
 
 const ActiveMaterials = () => {
-    // Get materials from shared configuration
-    const [materials, setMaterials] = useState(MATERIALS_LIST);
+    // Get materials from shared configuration or localStorage
+    const getInitialMaterials = () => {
+        const stored = localStorage.getItem('materials');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                return MATERIALS_LIST;
+            }
+        }
+        return MATERIALS_LIST;
+    };
+
+    const [materials, setMaterials] = useState(getInitialMaterials());
+    const [showAddPopup, setShowAddPopup] = useState(false);
+    const [showEditPopup, setShowEditPopup] = useState(false);
+    const [editingMaterial, setEditingMaterial] = useState(null);
+
+    // Save to localStorage whenever materials change
+    useEffect(() => {
+        localStorage.setItem('materials', JSON.stringify(materials));
+    }, [materials]);
 
     // Group materials by category
-    const groupedMaterials = getMaterialsByCategory();
+    const groupedMaterials = materials.reduce((acc, material) => {
+        if (!acc[material.category]) {
+            acc[material.category] = [];
+        }
+        acc[material.category].push(material);
+        return acc;
+    }, {});
+
+    const handleAddMaterial = (newMaterial) => {
+        setMaterials([...materials, newMaterial]);
+    };
+
+    const handleEditMaterial = (updatedMaterial) => {
+        setMaterials(materials.map(m => 
+            m.id === updatedMaterial.id ? updatedMaterial : m
+        ));
+    };
+
+    const handleEditClick = (material) => {
+        setEditingMaterial(material);
+        setShowEditPopup(true);
+    };
 
     return (
         <NavigationWrapper>
@@ -15,6 +59,12 @@ const ActiveMaterials = () => {
                 <div className="flex flex-col w-11/12 md:w-5/6">
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl md:text-5xl text-black/70">Materiales Activos</h1>
+                        <button
+                            onClick={() => setShowAddPopup(true)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors"
+                        >
+                            + Nuevo Material
+                        </button>
                     </div>
 
                     <div className="flex flex-col w-full bg-white/20 border-[1px] border-black/40 rounded-3xl p-6 mb-32 shadow-xl shadow-black/30">
@@ -25,27 +75,56 @@ const ActiveMaterials = () => {
                                     {items.map((material) => (
                                         <div
                                             key={material.id}
-                                            className="bg-white/50 rounded-xl p-4 border border-black/20"
+                                            className="bg-white/50 rounded-xl p-4 border border-black/20 flex items-center justify-between"
                                         >
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-lg text-black">{material.name}</span>
-                                                <span className="text-sm text-black/50">#{material.id}</span>
+                                            <div className="flex items-center gap-3 flex-1">
+                                                <div
+                                                    style={{
+                                                        width: '20px',
+                                                        height: '20px',
+                                                        backgroundColor: material.color,
+                                                        border: '1px solid #000',
+                                                        borderRadius: '4px',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+                                                <div className="flex flex-col flex-1">
+                                                    <span className="text-lg text-black">{material.name}</span>
+                                                    <span className="text-sm text-black/50">#{material.id}</span>
+                                                </div>
                                             </div>
+                                            <button
+                                                onClick={() => handleEditClick(material)}
+                                                className="ml-2 p-2 hover:bg-gray-200 rounded transition-colors"
+                                                title="Editar material"
+                                            >
+                                                <img src={editIcon} alt="Edit" className="w-5 h-5" />
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         ))}
                     </div>
-
-                    <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded-lg text-sm text-green-800">
-                        <strong>✓ Sincronizado en tiempo real:</strong> Esta lista se comparte automáticamente con la aplicación móvil desde <code>shared/materials.js</code>. Cualquier cambio en el archivo compartido se reflejará en ambas aplicaciones.
-                    </div>
                 </div>
             </div>
+
+            {showAddPopup && (
+                <AddMaterialPopup
+                    onClose={setShowAddPopup}
+                    onAdd={handleAddMaterial}
+                />
+            )}
+
+            {showEditPopup && editingMaterial && (
+                <EditMaterialPopup
+                    onClose={setShowEditPopup}
+                    material={editingMaterial}
+                    onUpdate={handleEditMaterial}
+                />
+            )}
         </NavigationWrapper>
     );
 };
-
 
 export default ActiveMaterials;

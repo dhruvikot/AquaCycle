@@ -145,7 +145,63 @@ const deletePickup = async (pickupId) => {
         throw new Error('Failed to delete pickup');
     }
 };
-  
+
+const fetchMaterials = async (setMaterials) => {
+    // LOCAL DATABASE CALL
+    try {
+        const response = await localDB.getMaterials();
+        console.log('Local DB Materials:', response);
+        setMaterials(response.materials);
+    } catch (error) {
+        console.log("fetchMaterials error:", error);
+        throw error;
+    }
+};
+
+const fetchMaterial = async (materialId) => {
+    // LOCAL DATABASE CALL
+    try {
+        const data = await localDB.getMaterial(materialId);
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch material details:', error);
+        throw error;
+    }
+};
+
+const createMaterial = async (materialData) => {
+    // LOCAL DATABASE CALL
+    try {
+        const data = await localDB.createMaterial(materialData);
+        return data;
+    } catch (error) {
+        console.error('Error creating material:', error);
+        throw error;
+    }
+};
+
+const updateMaterial = async (materialId, materialData) => {
+    // LOCAL DATABASE CALL
+    try {
+        const data = await localDB.updateMaterial(materialId, materialData);
+        return data;
+    } catch (error) {
+        console.error('Error updating material:', error);
+        throw error;
+    }
+};
+
+const deleteMaterial = async (materialId) => {
+    // LOCAL DATABASE CALL
+    try {
+        const data = await localDB.deleteMaterial(materialId);
+        return data;
+    } catch (error) {
+        console.error('Error deleting material:', error);
+        throw error;
+    }
+};
+
 
 
 
@@ -158,7 +214,12 @@ const calls = {
     fetchPickups,
     patchPickup,
     fetchPickup,
-    deletePickup
+    deletePickup,
+    fetchMaterials,
+    fetchMaterial,
+    createMaterial,
+    updateMaterial,
+    deleteMaterial
 };
 
 export default calls;

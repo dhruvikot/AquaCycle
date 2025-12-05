@@ -2,6 +2,7 @@
 // This simulates a local database for testing and demo purposes
 
 import { getClientsForDriverApp } from '../shared/clients';
+import { MATERIALS_LIST } from '../shared/materials';
 
 let localData = {
     users: [
@@ -13,6 +14,12 @@ let localData = {
         { id: 6, first_name: 'Sarah', last_name: 'Johnson', email: 'sarah.j@eco.org', phone: '555-6003' }
     ],
     clients: getClientsForDriverApp(), // Now using shared clients from shared/clients.js
+    materials: MATERIALS_LIST.map(m => ({
+        id: m.id,
+        name: m.name,
+        category: m.category,
+        color: m.color
+    })), // Materials stored in database with proper linking
     pickups: [
         {
             id: 1,
@@ -45,8 +52,8 @@ let localData = {
                 { id: 4, color: 'Yellow', weight: 45 }
             ],
             categories: [
-                { id: 1, material: { name: 'PET Cristal' }, weight: 35 },
-                { id: 2, material: { name: 'Papel Blanco' }, weight: 40 }
+                { id: 1, material: { id: 1, name: 'PET Cristal' }, weight: 35 },
+                { id: 2, material: { id: 7, name: 'Papel Blanco' }, weight: 40 }
             ]
         },
         {
@@ -64,9 +71,9 @@ let localData = {
                 { id: 6, color: 'Green', weight: 60 }
             ],
             categories: [
-                { id: 3, material: { name: 'Cartón Corrugado' }, weight: 60 },
-                { id: 4, material: { name: 'Aluminio' }, weight: 30 },
-                { id: 5, material: { name: 'Vidrio' }, weight: 30 }
+                { id: 3, material: { id: 9, name: 'Cartón Corrugado' }, weight: 60 },
+                { id: 4, material: { id: 10, name: 'Aluminio' }, weight: 30 },
+                { id: 5, material: { id: 13, name: 'Vidrio' }, weight: 30 }
             ]
         },
         {
@@ -85,10 +92,10 @@ let localData = {
                 { id: 9, color: 'Green', weight: 20 }
             ],
             categories: [
-                { id: 6, material: { name: 'PET Cristal' }, weight: 30 },
-                { id: 7, material: { name: 'PET Verde' }, weight: 15 },
-                { id: 8, material: { name: 'Nylon Transparente' }, weight: 20 },
-                { id: 9, material: { name: 'Papel Blanco' }, weight: 20 }
+                { id: 6, material: { id: 1, name: 'PET Cristal' }, weight: 30 },
+                { id: 7, material: { id: 2, name: 'PET Verde' }, weight: 15 },
+                { id: 8, material: { id: 5, name: 'Nylon Transparente' }, weight: 20 },
+                { id: 9, material: { id: 7, name: 'Papel Blanco' }, weight: 20 }
             ]
         },
         {
@@ -123,11 +130,11 @@ let localData = {
                 { id: 14, color: 'Yellow', weight: 50 }
             ],
             categories: [
-                { id: 10, material: { name: 'PET Cristal' }, weight: 45 },
-                { id: 11, material: { name: 'Cartón Corrugado' }, weight: 70 },
-                { id: 12, material: { name: 'Papel Blanco' }, weight: 30 },
-                { id: 13, material: { name: 'Aluminio' }, weight: 25 },
-                { id: 14, material: { name: 'Vidrio' }, weight: 25 }
+                { id: 10, material: { id: 1, name: 'PET Cristal' }, weight: 45 },
+                { id: 11, material: { id: 9, name: 'Cartón Corrugado' }, weight: 70 },
+                { id: 12, material: { id: 7, name: 'Papel Blanco' }, weight: 30 },
+                { id: 13, material: { id: 10, name: 'Aluminio' }, weight: 25 },
+                { id: 14, material: { id: 13, name: 'Vidrio' }, weight: 25 }
             ]
         },
         {
@@ -145,9 +152,9 @@ let localData = {
                 { id: 16, color: 'Green', weight: 33 }
             ],
             categories: [
-                { id: 15, material: { name: 'PET Cristal' }, weight: 28 },
-                { id: 16, material: { name: 'Nylon Transparente' }, weight: 15 },
-                { id: 17, material: { name: 'Cartón Corrugado' }, weight: 25 }
+                { id: 15, material: { id: 1, name: 'PET Cristal' }, weight: 28 },
+                { id: 16, material: { id: 5, name: 'Nylon Transparente' }, weight: 15 },
+                { id: 17, material: { id: 9, name: 'Cartón Corrugado' }, weight: 25 }
             ]
         },
         {
@@ -183,10 +190,10 @@ let localData = {
                 { id: 22, color: 'Green', weight: 70 }
             ],
             categories: [
-                { id: 18, material: { name: 'Cartón Corrugado' }, weight: 85 },
-                { id: 19, material: { name: 'Chatarra' }, weight: 60 },
-                { id: 20, material: { name: 'Aluminio' }, weight: 40 },
-                { id: 21, material: { name: 'Vidrio' }, weight: 45 }
+                { id: 18, material: { id: 9, name: 'Cartón Corrugado' }, weight: 85 },
+                { id: 19, material: { id: 11, name: 'Chatarra' }, weight: 60 },
+                { id: 20, material: { id: 10, name: 'Aluminio' }, weight: 40 },
+                { id: 21, material: { id: 13, name: 'Vidrio' }, weight: 45 }
             ]
         },
         {
@@ -205,10 +212,10 @@ let localData = {
                 { id: 25, color: 'Green', weight: 20 }
             ],
             categories: [
-                { id: 22, material: { name: 'PET Cristal' }, weight: 32 },
-                { id: 23, material: { name: 'Papel Blanco' }, weight: 30 },
-                { id: 24, material: { name: 'Nylon Color' }, weight: 15 },
-                { id: 25, material: { name: 'Vidrio' }, weight: 15 }
+                { id: 22, material: { id: 1, name: 'PET Cristal' }, weight: 32 },
+                { id: 23, material: { id: 7, name: 'Papel Blanco' }, weight: 30 },
+                { id: 24, material: { id: 6, name: 'Nylon Color' }, weight: 15 },
+                { id: 25, material: { id: 13, name: 'Vidrio' }, weight: 15 }
             ]
         }
     ]
@@ -231,6 +238,58 @@ const localDB = {
     // Users
     getUsers: () => {
         return simulateAsync({ users: localData.users });
+    },
+
+    // Materials
+    getMaterials: () => {
+        return simulateAsync({ materials: localData.materials });
+    },
+
+    getMaterial: (materialId) => {
+        const material = localData.materials.find(m => m.id === parseInt(materialId));
+        return simulateAsync({ material });
+    },
+
+    createMaterial: (materialData) => {
+        // Find the next available ID
+        const maxId = localData.materials.length > 0 
+            ? Math.max(...localData.materials.map(m => m.id))
+            : 0;
+        
+        const newMaterial = {
+            id: maxId + 1,
+            name: materialData.name,
+            category: materialData.category,
+            color: materialData.color
+        };
+        
+        localData.materials.push(newMaterial);
+        return simulateAsync({ material: newMaterial, message: 'Material created successfully!' });
+    },
+
+    updateMaterial: (materialId, materialData) => {
+        const index = localData.materials.findIndex(m => m.id === parseInt(materialId));
+        
+        if (index !== -1) {
+            localData.materials[index] = {
+                ...localData.materials[index],
+                name: materialData.name,
+                category: materialData.category,
+                color: materialData.color
+            };
+            return simulateAsync({ material: localData.materials[index], message: 'Material updated successfully!' });
+        }
+        
+        return simulateAsync({ error: 'Material not found' });
+    },
+
+    deleteMaterial: (materialId) => {
+        const index = localData.materials.findIndex(m => m.id === parseInt(materialId));
+        if (index !== -1) {
+            localData.materials.splice(index, 1);
+            return simulateAsync({ message: 'Material deleted successfully!' });
+        }
+        return simulateAsync({ error: 'Material not found' });
     },
 
     // Clients
@@ -300,14 +359,28 @@ const localDB = {
                 });
             }
 
-            // Update categories
+            // Update categories - now linking by material ID
             let updatedCategories = existingPickup.categories || [];
             if (pickupData.pickup.categories) {
                 updatedCategories = pickupData.pickup.categories.map(category => {
-                    const existingCat = existingPickup.categories?.find(c => c.material.name === category.material);
+                    // Find material by name or ID to get full material object
+                    const materialData = typeof category.material === 'object' && category.material.id
+                        ? localData.materials.find(m => m.id === category.material.id)
+                        : localData.materials.find(m => m.name === (category.material?.name || category.material));
+                    
+                    const materialName = materialData?.name || (typeof category.material === 'string' ? category.material : category.material?.name);
+                    const materialId = materialData?.id || (category.material?.id);
+                    
+                    const existingCat = existingPickup.categories?.find(c => 
+                        c.material.id === materialId || c.material.name === materialName
+                    );
+                    
                     return {
                         id: existingCat?.id || nextCategoryId++,
-                        material: { name: category.material },
+                        material: { 
+                            id: materialId || materialData?.id,
+                            name: materialName
+                        },
                         weight: category.weight
                     };
                 });
@@ -347,6 +420,7 @@ const localDB = {
                 { id: 3, first_name: 'Test', last_name: 'User', email: 'test@example.com' }
             ],
             clients: [...localData.clients],
+            materials: [...localData.materials], // Preserve materials in database
             pickups: [...localData.pickups]
         };
         nextPickupId = 4;

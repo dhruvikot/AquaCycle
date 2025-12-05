@@ -26,34 +26,43 @@ const Header = ({ client, location, title="Default" }) => {
 
 const styles = StyleSheet.create({
     safeArea: {
-      backgroundColor: 'white', 
+      backgroundColor: '#FFFFFF',
     },
     container: {
-      backgroundColor: '#FFF',
+      backgroundColor: '#FFFFFF',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.05,
+      shadowRadius: 8,
+      elevation: 3,
     },
     headerLine: {
-      height: 10, 
-      backgroundColor: '#0038A8', 
-      width: '100%', 
+      height: 10,
+      backgroundColor: '#0038A8',
+      width: '100%',
     },
     headerContent: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: 10,
+      paddingHorizontal: 16,
+      paddingVertical: 12,
     },
     logo: {
-      width: 166, 
-      height: 76, 
+      width: 166,
+      height: 76,
       flexShrink: 0,
     },
     headerTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
+      fontSize: 22,
+      fontWeight: '700',
+      color: '#1A1A1A',
+      letterSpacing: -0.3,
     },
     userIcon: {
-      width: 30,
-      height: 30, 
+      width: 32,
+      height: 32,
+      borderRadius: 16,
     },
   });
   

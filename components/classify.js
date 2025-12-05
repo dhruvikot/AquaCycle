@@ -50,9 +50,12 @@ const Classify = () => {
       setTotalWeightFromSelectedPickup(selectedPickup.total_weight || 0);
 
       // Update the materials state with the collected weights from the selected pickup
+      // Match by material ID (preferred) or name (fallback) for proper linking
       const updatedMaterials = materials.map(material => {
         const category = selectedPickup.categories?.find(
-          category => category.material.name === material.name
+          category => 
+            (category.material?.id && category.material.id === material.id) ||
+            category.material?.name === material.name
         );
         return {
           ...material,
@@ -95,17 +98,26 @@ const Classify = () => {
     // Get the existing categories from the selected pickup
     const existingCategories = selectedPickup.categories || [];
 
-    // Determine the updated and deleted categories
+    // Determine the updated and deleted categories - now using material ID for proper linking
     const updatedCategories = materials
       .filter(material => parseFloat(material.weight) > 0)
       .map(material => ({
         id: null,
-        material: material.name,
+        material: {
+          id: material.id,
+          name: material.name
+        },
         weight: material.weight.toString()
       }));
 
     const deletedCategories = existingCategories
-      .filter(category => !updatedCategories.some(updatedCategory => updatedCategory.material === category.material.name))
+      .filter(category => {
+        const materialId = category.material?.id || (materials.find(m => m.name === category.material?.name)?.id);
+        return !updatedCategories.some(updatedCategory => 
+          updatedCategory.material.id === materialId || 
+          updatedCategory.material.name === category.material?.name
+        );
+      })
       .map(category => category.id);
 
     const payload = {
@@ -151,16 +163,43 @@ const Classify = () => {
       <View style={styles.container}>
         <Header title="Classify" />
         <View style={styles.pickersContainer}>
-          <Text>
-            {selectedClientName} - {selectedLocation} - {selectedDatetime}
+          <View style={{
+            backgroundColor: '#E0F2FE',
+            padding: 14,
+            borderRadius: 12,
+            borderWidth: 1.5,
+            borderColor: '#0EA5E9',
+            marginHorizontal: 12,
+          }}>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: '#1A1A1A', marginBottom: 4 }}>
+              Client: {selectedClientName}
+            </Text>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: '#1A1A1A', marginBottom: 4 }}>
+              Location: {selectedLocation}
+            </Text>
+            <Text style={{ fontSize: 15, fontWeight: '600', color: '#1A1A1A' }}>
+              Date: {selectedDatetime}
+            </Text>
+          </View>
+        </View>
+        <View style={{
+          backgroundColor: '#FEF3C7',
+          padding: 12,
+          marginHorizontal: 12,
+          marginTop: 8,
+          borderRadius: 10,
+          borderWidth: 1.5,
+          borderColor: '#F59E0B',
+        }}>
+          <Text style={[styles.name, { color: '#92400E', marginBottom: 0 }]}>
+            Weight from selected pickup: {totalWeightFromSelectedPickup} kg
           </Text>
         </View>
-        <Text style={styles.name}>Weight from selected pickup: {totalWeightFromSelectedPickup} kg</Text>
         <ScrollView style={styles.materialContainer} contentContainerStyle={styles.materialContent}>
           {materials.map(material => (
             <View key={material.id} style={[styles.material, { backgroundColor: material.color }]}>
               <View style={[styles.colorRectangle, { backgroundColor: material.color }]} />
-              <Text>{material.name}</Text>
+              <Text style={{ fontSize: 16, fontWeight: '600', color: '#1A1A1A', flex: 1 }}>{material.name}</Text>
               <View style={styles.weightContainer}>
                 {material.weight > 0 ? (
                   <Text style={styles.weightText}>{material.weight} kg</Text>
@@ -187,7 +226,20 @@ const Classify = () => {
             </View>
           ))}
         </ScrollView>
-        <Text>Total weight: {totalWeight} kg</Text>
+        <View style={{
+          backgroundColor: '#D1FAE5',
+          padding: 14,
+          marginHorizontal: 12,
+          marginTop: 12,
+          borderRadius: 12,
+          borderWidth: 1.5,
+          borderColor: '#10B981',
+          alignItems: 'center',
+        }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: '#059669' }}>
+            Total weight: {totalWeight} kg
+          </Text>
+        </View>
         <TextInput
           style={styles.commentInput}
           multiline
@@ -196,14 +248,14 @@ const Classify = () => {
           placeholder="Enter comments"
         />
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={[styles.cancelButton, { backgroundColor: 'grey', borderRadius: 10 }]} onPress={goBack}>
-            <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>CANCEL</Text>
+          <TouchableOpacity style={styles.cancelButton} onPress={goBack}>
+            <Text style={styles.buttonText}>CANCEL</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.submitButton, { backgroundColor: 'green', borderRadius: 10 }]}
+            style={styles.submitButton}
             onPress={submitMaterials}
           >
-            <Text style={[styles.buttonText, { color: 'white', fontWeight: 'bold' }]}>SUBMIT</Text>
+            <Text style={styles.buttonText}>SUBMIT</Text>
           </TouchableOpacity>
         </View>
       </View>

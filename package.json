@@ -20,7 +20,7 @@
     "expo-updates": "~0.25.15",
     "manifest": "^4.0.0-alpha.6",
     "react": "18.2.0",
-    "react-dom": "^19.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.74.1",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-picker-select": "^9.1.3",
@@ -31,8 +31,7 @@
     "url": "^0.11.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
-    "@expo/webpack-config": "^19.0.1"
+    "@babel/core": "^7.24.0"
   },
   "private": true
 }

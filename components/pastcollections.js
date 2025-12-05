@@ -36,11 +36,19 @@ const PastCollections = () => {
               <Text style={styles.text}>Client: {collection.client_data.client_name}</Text>
               <Text style={styles.text}>Location: {collection.location}</Text>
               <Text style={styles.text}>Weight: {collection.total_weight} kg</Text>
-              <Text style={styles.text}>Status: {collection.status}</Text>
+              <Text style={[styles.text, { 
+                fontWeight: '600', 
+                color: collection.status === 'C' ? '#059669' : '#2563EB',
+                textTransform: 'uppercase',
+                fontSize: 13,
+                marginTop: 4
+              }]}>
+                Status: {collection.status === 'C' ? 'Completed' : 'Pending'}
+              </Text>
             </View>
             <View style={styles.buttonsContainer}>
               <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, { backgroundColor: '#FEF3C7', borderColor: '#F59E0B' }]}
                 onPress={() =>
                   navigation.navigate('Collect', {
                     pickupId: collection.id,
@@ -51,10 +59,10 @@ const PastCollections = () => {
                   })
                 }
               >
-                <Text>Edit</Text>
+                <Text style={{ color: '#92400E', fontWeight: '600', fontSize: 14 }}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.button}
+                style={[styles.button, { backgroundColor: '#E0E7FF', borderColor: '#6366F1' }]}
                 onPress={() =>
                   navigation.navigate('Classify', {
                     pickupId: collection.id,
@@ -65,7 +73,7 @@ const PastCollections = () => {
                   })
                 }
               >
-                <Text>Classify</Text>
+                <Text style={{ color: '#4338CA', fontWeight: '600', fontSize: 14 }}>Classify</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -78,44 +86,63 @@ const PastCollections = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#F5F7FA',
   },
   container: {
     flex: 1,
-    padding: 10,
+    padding: 16,
   },
   collectionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
+    padding: 18,
+    marginBottom: 12,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   collectionInfo: {
     flex: 3,
   },
   text: {
     flex: 1,
-    marginBottom: 5,
+    marginBottom: 6,
+    fontSize: 15,
+    color: '#1A1A1A',
+    fontWeight: '500',
   },
   buttonsContainer: {
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'space-between',
-    minWidth: 100,
+    minWidth: 120,
+    gap: 8,
   },
   button: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    backgroundColor: '#e7e7e7',
-    borderRadius: 5,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   completed: {
-    backgroundColor: '#A3C77B',
+    backgroundColor: '#D1FAE5',
+    borderColor: '#10B981',
   },
   pending: {
-    backgroundColor: '#ADD8E6',
+    backgroundColor: '#DBEAFE',
+    borderColor: '#3B82F6',
   }
 });
 

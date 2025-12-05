@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import calls from '../services/calls';
 
@@ -28,7 +28,21 @@ const Contact = ({ clientId }) => {
 
   return (
     <View style={styles.contactWrapper}>
-      <Button title="Contact Info" onPress={() => setIsVisible(!isVisible)} />
+      <TouchableOpacity 
+        onPress={() => setIsVisible(!isVisible)}
+        style={{
+          backgroundColor: '#FFFFFF',
+          padding: 12,
+          borderRadius: 10,
+          borderWidth: 1.5,
+          borderColor: '#E5E7EB',
+          alignItems: 'center',
+        }}
+      >
+        <Text style={{ color: '#0038A8', fontWeight: '600', fontSize: 15 }}>
+          {isVisible ? 'Hide Contact Info' : 'Show Contact Info'}
+        </Text>
+      </TouchableOpacity>
 
       {isVisible && clientContactInfo && (
         <View style={styles.detailsContainer}>
@@ -115,7 +129,7 @@ const DropdownSection = ({ onClientSelect, onLocationSelect }) => {
 const styles = StyleSheet.create({
   mainContainer: {
     padding: 16,
-    backgroundColor: "#F8FBFF",
+    backgroundColor: "#F5F7FA",
   },
 
   dropdownContainer: {
@@ -123,27 +137,36 @@ const styles = StyleSheet.create({
   },
 
   dropdownLabel: {
-    fontSize: 16,
-    fontWeight: "700",
-    marginBottom: 6,
-    color: "#0D47A1",
+    fontSize: 15,
+    fontWeight: "600",
+    marginBottom: 8,
+    color: "#0038A8",
+    letterSpacing: 0.2,
   },
 
   contactWrapper: {
-    marginTop: 10,
+    marginTop: 12,
   },
 
   detailsContainer: {
     marginTop: 12,
-    padding: 12,
-    backgroundColor: "#E3F2FD",
-    borderRadius: 8,
+    padding: 16,
+    backgroundColor: "#E0F2FE",
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: "#0EA5E9",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
 
   detailText: {
     fontSize: 15,
-    marginBottom: 5,
-    color: "#000",
+    marginBottom: 6,
+    color: "#1A1A1A",
+    fontWeight: '500',
   },
 });
 
@@ -153,36 +176,36 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: 1.2,
-    borderColor: "#1976D2",
-    borderRadius: 10,
-    backgroundColor: "#F5F9FF",
-    color: "black",
+    borderWidth: 1.5,
+    borderColor: "#0038A8",
+    borderRadius: 12,
+    backgroundColor: "#FFFFFF",
+    color: "#1A1A1A",
     paddingRight: 30,
-    marginTop: 3,
+    marginTop: 4,
 
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
 
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    borderWidth: 1.2,
-    borderColor: "#1976D2",
-    borderRadius: 10,
-    backgroundColor: "#F5F9FF",
-    color: "black",
+    borderWidth: 1.5,
+    borderColor: "#0038A8",
+    borderRadius: 12,
+    backgroundColor: "#FFFFFF",
+    color: "#1A1A1A",
     paddingRight: 30,
-    marginTop: 3,
-    elevation: 2,
+    marginTop: 4,
+    elevation: 3,
   },
 
   placeholder: {
-    color: "#78849E",
+    color: "#9CA3AF",
     fontSize: 15,
   },
 });

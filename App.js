@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, { useState, createContext, useContext, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert, Linking } from 'react-native';
 import Receptor from './components/receptor';
@@ -7,6 +8,45 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import calls from './services/calls';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20, backgroundColor: '#F5F7FA' }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#DC2626' }}>
+            Something went wrong
+          </Text>
+          <Text style={{ fontSize: 14, color: '#6B7280', textAlign: 'center', marginBottom: 20 }}>
+            {this.state.error?.toString() || 'Unknown error'}
+          </Text>
+          <TouchableOpacity
+            style={{ backgroundColor: '#0038A8', padding: 12, borderRadius: 8 }}
+            onPress={() => this.setState({ hasError: false, error: null })}
+          >
+            <Text style={{ color: '#FFFFFF', fontWeight: '600' }}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Create a context to manage the logged-in user
 const UserContext = createContext();
@@ -68,7 +108,7 @@ const AdminHome = ({ navigation }) => {
         style={styles.homeButton}
         onPress={() => navigation.navigate('Classify')}
       >
-        <Text style={styles.buttonText}>Classify</Text>
+        <Text style={styles.buttonText}>Materials Admin</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.homeButton}
@@ -99,7 +139,7 @@ const DriverHome = ({ navigation }) => {
         style={styles.homeButton}
         onPress={() => navigation.navigate('Classify')}
       >
-        <Text style={styles.buttonText}>Classify</Text>
+        <Text style={styles.buttonText}>Materials Admin</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.homeButton}
@@ -191,24 +231,56 @@ const Stack = createStackNavigator();
 const App = () => {
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    // Log app initialization
+    console.log('App initialized');
+    
+    // Catch any unhandled promise rejections
+    const errorHandler = (error) => {
+      console.error('Unhandled error:', error);
+    };
+    
+    // Catch any uncaught errors
+    if (typeof ErrorUtils !== 'undefined') {
+      const originalHandler = ErrorUtils.getGlobalHandler();
+      ErrorUtils.setGlobalHandler((error, isFatal) => {
+        console.error('Global error:', error, 'isFatal:', isFatal);
+        if (originalHandler) {
+          originalHandler(error, isFatal);
+        }
+      });
+    }
+  }, []);
+
   return (
-  <SafeAreaProvider>
-    <NavigationContainer>
-      <UserContext.Provider value={{ user, setUser }}>
-        <Stack.Navigator initialRouteName="Login">
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen
-            name="Collect"
-            component={Receptor}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="Classify" component={Classify} />
-          <Stack.Screen name="PastCollections" component={PastCollections} />
-        </Stack.Navigator>
-      </UserContext.Provider>
-    </NavigationContainer>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <NavigationContainer
+          onError={(error) => {
+            console.error('Navigation error:', error);
+          }}
+        >
+          <UserContext.Provider value={{ user, setUser }}>
+            <Stack.Navigator 
+              initialRouteName="Login"
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <Stack.Screen name="Login" component={LoginPage} />
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen
+                name="Collect"
+                component={Receptor}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="Classify" component={Classify} />
+              <Stack.Screen name="PastCollections" component={PastCollections} />
+            </Stack.Navigator>
+          </UserContext.Provider>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 };
 
@@ -222,114 +294,140 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F5F7FA',
     padding: 20,
   },
   loginBox: {
     width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 30,
+    maxWidth: 420,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 40,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 8,
   },
   loginTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 32,
+    fontWeight: '700',
     textAlign: 'center',
-    marginBottom: 10,
-    color: '#333',
+    marginBottom: 8,
+    color: '#1A1A1A',
+    letterSpacing: -0.5,
   },
   loginSubtitle: {
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'center',
-    marginBottom: 30,
-    color: '#666',
+    marginBottom: 32,
+    color: '#6B7280',
+    fontWeight: '400',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FAFBFC',
+    color: '#1A1A1A',
   },
   loginButton: {
-    backgroundColor: '#2196F3',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: '#0038A8',
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 8,
+    shadowColor: '#0038A8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   loginButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   demoModeWarning: {
     position: 'absolute',
-    top: 40,
-    backgroundColor: '#e3f2fd',
-    padding: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#2196F3',
+    top: 50,
+    backgroundColor: '#E0F2FE',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: '#0EA5E9',
   },
   demoModeText: {
-    color: '#1976d2',
-    fontWeight: 'bold',
-    fontSize: 14,
+    color: '#0284C7',
+    fontWeight: '600',
+    fontSize: 13,
   },
   homeContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F7FA',
+    paddingHorizontal: 20,
   },
   homeButton: {
-    margin: 10,
-    padding: 20,
-    backgroundColor: '#2196F3',
-    borderRadius: 5,
-    width: '80%',
+    marginVertical: 8,
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    backgroundColor: '#0038A8',
+    borderRadius: 14,
+    width: '85%',
     alignItems: 'center',
+    shadowColor: '#0038A8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
   welcomeText: {
-    fontSize: 20,
-    marginBottom: 10,
-    fontWeight: 'bold',
+    fontSize: 24,
+    marginBottom: 8,
+    fontWeight: '700',
+    color: '#1A1A1A',
   },
   roleText: {
-    fontSize: 16,
-    marginBottom: 20,
-    color: '#666',
-    fontStyle: 'italic',
+    fontSize: 15,
+    marginBottom: 32,
+    color: '#6B7280',
+    fontWeight: '500',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   adminButton: {
-    backgroundColor: '#4CAF50',
-    marginTop: 10,
-    marginBottom: 20,
+    backgroundColor: '#10B981',
+    marginTop: 16,
+    marginBottom: 24,
   },
   divider: {
-    width: '80%',
-    paddingVertical: 10,
-    marginVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    width: '85%',
+    paddingVertical: 16,
+    marginVertical: 16,
+    borderTopWidth: 1.5,
+    borderTopColor: '#E5E7EB',
   },
   dividerText: {
     textAlign: 'center',
-    color: '#666',
-    fontSize: 14,
-    marginTop: 10,
+    color: '#6B7280',
+    fontSize: 13,
+    marginTop: 8,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 });
 
