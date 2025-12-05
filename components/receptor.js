@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Text, Alert, View } from 'react-native';
+import { StyleSheet, Text, Alert, View, ScrollView, Platform, SafeAreaView, Dimensions } from 'react-native';
 import Header from './header';
 import DropdownSection from './picker';
 import Entry from './entry';
@@ -20,6 +20,9 @@ const Receptor = ({ route, navigation }) => {
     const [locationName, setLocationName] = useState('');
     const [deletedBags, setDeletedBags] = useState([]);
     const [notes, setNotes] = useState('');
+    const [voiceColor, setVoiceColor] = useState(null);
+    const [voiceBags, setVoiceBags] = useState(null);
+    const [voiceWeight, setVoiceWeight] = useState(null);
 
     useEffect(() => {
         calls.fetchClients((clientData) => {
@@ -99,9 +102,9 @@ const Receptor = ({ route, navigation }) => {
     }, [route.params, clients]);
 
     useEffect(() => {
-        if (selectedClient) {
+        if (selectedClient && clients.length > 0) {
             const client = clients.find(client => client.value === selectedClient);
-            if (client) {
+            if (client && client.locations) {
                 setLocations(client.locations.map(location => ({
                     label: location.name,
                     value: location.id,
@@ -109,20 +112,31 @@ const Receptor = ({ route, navigation }) => {
             } else {
                 setLocations([]);
             }
+        } else if (!selectedClient) {
+            setLocations([]);
+            setSelectedLocation(null);
         }
-    }, [selectedClient]);
+    }, [selectedClient, clients]);
 
     const handleAddEntry = (color, bags, weight) => {
+        const bagCount = parseInt(bags) || 0;
+        const bagWeight = parseFloat(weight) || 0;
+        
+        if (!color || bagCount <= 0 || bagWeight <= 0) {
+            Alert.alert("Error", "Please provide valid color, count, and weight.");
+            return;
+        }
+        
         const newEntry = {
             id: null,
             color: color,
-            bags: parseInt(bags),
-            weight: parseInt(weight)
+            bags: bagCount,
+            weight: bagWeight
         };
         const updatedEntries = [...entries, newEntry];
         setEntries(updatedEntries);
-        const updatedTotalBags = totalBags + parseInt(bags);
-        const updatedTotalWeight = totalWeight + parseInt(weight);
+        const updatedTotalBags = totalBags + bagCount;
+        const updatedTotalWeight = totalWeight + bagWeight;
         setTotalBags(updatedTotalBags);
         setTotalWeight(updatedTotalWeight);
     };
@@ -145,8 +159,9 @@ const Receptor = ({ route, navigation }) => {
 
     const handleSubmit = async () => {
         if (!selectedClient || !selectedLocation) {
-            Alert.alert("Error", "Please select a client and location.");
-            return;
+            const errorMsg = "Please select a client and location.";
+            Alert.alert("Error", errorMsg);
+            throw new Error(errorMsg);
         }
 
         const payload_post = {
@@ -187,65 +202,95 @@ const Receptor = ({ route, navigation }) => {
         };
 
         try {
+            console.log('Starting submit with payload:', JSON.stringify({ payload_post, payload_patch, entries, totalWeight, pickupId }, null, 2));
+            
             if (totalWeight === 0 && pickupId) {
+                console.log('Deleting pickup because totalWeight is 0');
                 await calls.deletePickup(pickupId);
+                console.log('Pickup deleted, navigating...');
                 navigation.navigate('PastCollections');
             } else if (pickupId) {
+                console.log('Patching existing pickup:', pickupId);
                 await calls.patchPickup(pickupId, payload_patch);
+                console.log('Pickup patched, navigating...');
                 navigation.navigate('PastCollections');
             } else {
+                console.log('Creating new pickup');
                 await calls.postPickups(payload_post);
+                console.log('Pickup created, navigating...');
                 navigation.navigate('PastCollections');
             }
+            console.log('Submit completed successfully');
         } catch (error) {
             console.error('Error submitting data:', error);
-            Alert.alert("Error", "Failed to submit data.");
+            const errorMsg = error.message || "Failed to submit data.";
+            Alert.alert("Error", errorMsg);
+            throw error; // Re-throw so voice assistant can catch it
         }
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <Header title="Collect" />
-            {pickupId ? (
-                <View style={styles.infoContainer}>
-                    <Text style={styles.infoText}>Client: {clientName}</Text>
-                    <Text style={styles.infoText}>Location: {locationName}</Text>
-                </View>
-            ) : (
-                <DropdownSection
+            <Header title="Collect" showBackButton={true} />
+            <ScrollView 
+                style={styles.scrollView}
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={true}
+                nestedScrollEnabled={true}
+                bounces={false}
+            >
+                {pickupId ? (
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoText}>Client: {clientName}</Text>
+                        <Text style={styles.infoText}>Location: {locationName}</Text>
+                    </View>
+                ) : (
+                    <DropdownSection
+                        clients={clients}
+                        locations={locations}
+                        selectedClient={selectedClient}
+                        selectedLocation={selectedLocation}
+                        onClientSelect={setSelectedClient}
+                        onLocationSelect={setSelectedLocation}
+                    />
+                )}
+                <Entry
+                    onAdd={handleAddEntry}
+                    selectedClient={selectedClient}
+                    selectedLocation={selectedLocation}
+                    voiceColor={voiceColor}
+                    voiceBags={voiceBags}
+                    voiceWeight={voiceWeight}
+                    onVoiceValuesUsed={() => {
+                        setVoiceColor(null);
+                        setVoiceBags(null);
+                        setVoiceWeight(null);
+                    }}
+                />
+                <VoiceAssistant
                     clients={clients}
-                    locations={locations}
                     selectedClient={selectedClient}
                     selectedLocation={selectedLocation}
                     onClientSelect={setSelectedClient}
                     onLocationSelect={setSelectedLocation}
+                    onAddEntry={handleAddEntry}
+                    onSubmit={handleSubmit}
+                    setNotes={setNotes}
+                    setVoiceColor={setVoiceColor}
+                    setVoiceBags={setVoiceBags}
+                    setVoiceWeight={setVoiceWeight}
                 />
-            )}
-            <Entry
-                onAdd={handleAddEntry}
-                selectedClient={selectedClient}
-                selectedLocation={selectedLocation}
-            />
-            <VoiceAssistant
-                clients={clients}
-                selectedClient={selectedClient}
-                selectedLocation={selectedLocation}
-                onClientSelect={setSelectedClient}
-                onLocationSelect={setSelectedLocation}
-                onAddEntry={handleAddEntry}
-                onSubmit={handleSubmit}
-                setNotes={setNotes}
-            />
-            <Dashboard
-                entries={entries}
-                totalBags={totalBags}
-                totalWeight={totalWeight}
-                onRemove={handleRemoveEntry}
-                navigation={navigation}
-                handleSubmit={handleSubmit}
-                notes={notes}
-                setNotes={setNotes}
-            />
+                <Dashboard
+                    entries={entries}
+                    totalBags={totalBags}
+                    totalWeight={totalWeight}
+                    onRemove={handleRemoveEntry}
+                    navigation={navigation}
+                    handleSubmit={handleSubmit}
+                    notes={notes}
+                    setNotes={setNotes}
+                />
+            </ScrollView>
         </SafeAreaView>
     );
 };
@@ -254,6 +299,26 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: 'white',
+        ...(Platform.OS === 'web' && {
+            height: '100vh',
+            maxHeight: '100vh',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+        }),
+    },
+    scrollView: {
+        flex: 1,
+        ...(Platform.OS === 'web' && {
+            flex: 1,
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            WebkitOverflowScrolling: 'touch',
+            minHeight: 0,
+        }),
+    },
+    scrollContent: {
+        paddingBottom: 100,
     },
     infoContainer: {
         padding: 10,

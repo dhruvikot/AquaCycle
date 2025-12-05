@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
 import Header from './header';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import calls from '../services/calls';
 
 const PastCollections = () => {
   const navigation = useNavigation();
   const [collections, setCollections] = useState([]);
 
-  useEffect(() => {
+  const loadCollections = () => {
     calls.fetchPickups()
       .then(data => {
         const sortedData = data.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
@@ -18,6 +18,16 @@ const PastCollections = () => {
         console.error('Failed to fetch collections:', error);
         Alert.alert('Error', 'Failed to fetch collections');
       });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadCollections();
+    }, [])
+  );
+
+  useEffect(() => {
+    loadCollections();
   }, []);
 
   return (

@@ -41,38 +41,16 @@ const Contact = ({ clientId }) => {
   );
 };
 
-const DropdownSection = ({ onClientSelect, onLocationSelect }) => {
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [clients, setClients] = useState([]);
-  const [locations, setLocations] = useState([]);
-
-  useEffect(() => {
-    calls.fetchClients((clientData) => {
-      const formattedClients = clientData.map(client => ({
-        label: client.client_name,
-        value: client.id,
-        locations: client.locations
-      }));
-      setClients(formattedClients);
-    });
-  }, []);
-
-  const onClientValueChange = (clientId) => {
-    const id = parseInt(clientId);
-    const selected = clients.find(c => c.value === id);
-
-    setSelectedClient(selected);
-
-    if (selected) {
-      const locationItems = selected.locations.map(location => ({
-        label: location.name,
-        value: location.id,
-      }));
-      setLocations(locationItems);
-    } else {
-      setLocations([]);
-    }
-  };
+const DropdownSection = ({ 
+  clients = [], 
+  locations = [], 
+  selectedClient, 
+  selectedLocation,
+  onClientSelect, 
+  onLocationSelect 
+}) => {
+  // Find the selected client object for contact info
+  const currentClient = clients.find(c => c.value === selectedClient);
 
   return (
     <View style={styles.mainContainer}>
@@ -81,11 +59,9 @@ const DropdownSection = ({ onClientSelect, onLocationSelect }) => {
       <View style={styles.dropdownContainer}>
         <Text style={styles.dropdownLabel}>Client</Text>
         <RNPickerSelect
-          onValueChange={(value) => {
-            onClientSelect(value);
-            onClientValueChange(value);
-          }}
+          onValueChange={onClientSelect}
           items={clients}
+          value={selectedClient || undefined}
           style={pickerSelectStyles}
           placeholder={{ label: "Select a client", value: null }}
           useNativeAndroidPickerStyle={false}
@@ -98,15 +74,17 @@ const DropdownSection = ({ onClientSelect, onLocationSelect }) => {
         <RNPickerSelect
           onValueChange={onLocationSelect}
           items={locations}
+          value={selectedLocation || undefined}
           style={pickerSelectStyles}
           placeholder={{ label: "Select a location", value: null }}
           useNativeAndroidPickerStyle={false}
+          disabled={!selectedClient || locations.length === 0}
         />
       </View>
 
       {/* CONTACT INFO */}
-      {selectedClient && (
-        <Contact clientId={selectedClient.value} />
+      {currentClient && (
+        <Contact clientId={currentClient.value} />
       )}
     </View>
   );

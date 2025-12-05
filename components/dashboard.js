@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   container: {
-    flex: 1,
     marginTop: 60,
     backgroundColor: '#f7f7f7',
   },

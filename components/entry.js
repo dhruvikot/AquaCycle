@@ -2,12 +2,31 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Button } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-const Entry = ({ onAdd, selectedClient, selectedLocation }) => {
+const Entry = ({ onAdd, selectedClient, selectedLocation, voiceColor, voiceBags, voiceWeight, onVoiceValuesUsed }) => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedBags, setSelectedBags] = useState(null);
   const [weight, setWeight] = useState('');
 
-  const isAddButtonDisabled = !selectedClient || !selectedLocation || !selectedColor || !selectedBags;
+  // Update form fields when voice assistant provides values
+  React.useEffect(() => {
+    if (voiceColor) {
+      setSelectedColor(voiceColor);
+    }
+  }, [voiceColor]);
+
+  React.useEffect(() => {
+    if (voiceBags) {
+      setSelectedBags(voiceBags);
+    }
+  }, [voiceBags]);
+
+  React.useEffect(() => {
+    if (voiceWeight) {
+      setWeight(voiceWeight);
+    }
+  }, [voiceWeight]);
+
+  const isAddButtonDisabled = !selectedClient || !selectedLocation || !selectedColor || !selectedBags || !weight || parseFloat(weight) <= 0;
 
   const colorItems = [
     { label: 'Blue', value: 'Blue' },
