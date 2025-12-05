@@ -164,6 +164,12 @@ const Receptor = ({ route, navigation }) => {
             throw new Error(errorMsg);
         }
 
+        // Get client and location names from the selected values
+        const selectedClientObj = clients.find(c => c.value === selectedClient);
+        const selectedLocationObj = locations.find(l => l.value === selectedLocation);
+        const finalClientName = clientName || selectedClientObj?.label || '';
+        const finalLocationName = locationName || selectedLocationObj?.label || '';
+
         const payload_post = {
             pickup: {
                 client: selectedClient.toString(),
@@ -204,6 +210,8 @@ const Receptor = ({ route, navigation }) => {
         try {
             console.log('Starting submit with payload:', JSON.stringify({ payload_post, payload_patch, entries, totalWeight, pickupId }, null, 2));
             
+            let finalPickupId = pickupId;
+            
             if (totalWeight === 0 && pickupId) {
                 console.log('Deleting pickup because totalWeight is 0');
                 await calls.deletePickup(pickupId);
@@ -211,14 +219,31 @@ const Receptor = ({ route, navigation }) => {
                 navigation.navigate('PastCollections');
             } else if (pickupId) {
                 console.log('Patching existing pickup:', pickupId);
-                await calls.patchPickup(pickupId, payload_patch);
-                console.log('Pickup patched, navigating...');
-                navigation.navigate('PastCollections');
+                const response = await calls.patchPickup(pickupId, payload_patch);
+                finalPickupId = pickupId;
+                console.log('Pickup patched, navigating to classify...');
+                // Navigate to classify page to classify the weight
+                navigation.navigate('Classify', {
+                    pickupId: finalPickupId,
+                    clientName: finalClientName,
+                    location: finalLocationName,
+                    datetime: new Date().toISOString(),
+                    totalWeight: totalWeight,
+                });
             } else {
                 console.log('Creating new pickup');
-                await calls.postPickups(payload_post);
-                console.log('Pickup created, navigating...');
-                navigation.navigate('PastCollections');
+                const response = await calls.postPickups(payload_post);
+                // Get the pickup ID from the response
+                finalPickupId = response?.pickup?.id || response?.id;
+                console.log('Pickup created with ID:', finalPickupId, ', navigating to classify...');
+                // Navigate to classify page to classify the weight
+                navigation.navigate('Classify', {
+                    pickupId: finalPickupId,
+                    clientName: finalClientName,
+                    location: finalLocationName,
+                    datetime: new Date().toISOString(),
+                    totalWeight: totalWeight,
+                });
             }
             console.log('Submit completed successfully');
         } catch (error) {

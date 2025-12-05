@@ -1,6 +1,30 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: 'white',
+    ...(Platform.OS === 'web' && {
+      height: '100vh',
+      maxHeight: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+    }),
+  },
+  scrollView: {
+    flex: 1,
+    ...(Platform.OS === 'web' && {
+      flex: 1,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch',
+      minHeight: 0,
+    }),
+  },
+  scrollContent: {
+    paddingBottom: 100,
+  },
   container: {
     flex: 1,
     paddingTop: 0, // Remove paddingTop
@@ -46,7 +70,7 @@ const styles = StyleSheet.create({
   materialContainer: {
     marginBottom: 10,
     padding: 10,
-    marginTop: 10, // Move the material container up
+    marginTop: 10,
   },
   material: {
     flexDirection: 'row',
@@ -63,11 +87,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   weightInput: {
-    width: 60,
+    width: 80,
     textAlign: 'center',
     borderColor: 'gray',
     borderWidth: 1,
+    borderRadius: 4,
     height: 40,
+    paddingHorizontal: 8,
+    fontSize: 16,
+    backgroundColor: 'white',
   },
   kgText: {
     marginLeft: 20,
@@ -110,6 +138,70 @@ const styles = StyleSheet.create({
   },
   materialContent: {
     paddingBottom: 20,
+    flexGrow: 1,
+  },
+  weightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    flex: 1,
+  },
+  weightText: {
+    marginRight: 10,
+    fontSize: 16,
+  },
+  editButton: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    minWidth: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  colorRectangle: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    marginRight: 10,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  materialName: {
+    flex: 1,
+    fontSize: 16,
+  },
+  summaryContainer: {
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+    marginHorizontal: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  totalWeightText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  totalWeightError: {
+    color: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 5,
+    fontWeight: 'bold',
+  },
+  buttonText: {
+    fontSize: 16,
   },
 });
 
