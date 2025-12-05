@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert, Platform } from 'react-native';
 import Header from './header';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import calls from '../services/calls';
@@ -33,7 +33,13 @@ const PastCollections = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Header title="Past Collections" />
-      <ScrollView style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={true}
+        nestedScrollEnabled={true}
+        bounces={false}
+      >
         {collections.map((collection) => (
           <View
             key={collection.id}
@@ -89,10 +95,27 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: 'white',
+    ...(Platform.OS === 'web' && {
+      height: '100vh',
+      maxHeight: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+    }),
   },
-  container: {
+  scrollView: {
     flex: 1,
+    ...(Platform.OS === 'web' && {
+      flex: 1,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      WebkitOverflowScrolling: 'touch',
+      minHeight: 0,
+    }),
+  },
+  scrollContent: {
     padding: 10,
+    paddingBottom: 100,
   },
   collectionRow: {
     flexDirection: 'row',
