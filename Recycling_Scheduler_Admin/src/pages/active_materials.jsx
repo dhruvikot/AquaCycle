@@ -24,6 +24,15 @@ const ActiveMaterials = () => {
     const [showEditPopup, setShowEditPopup] = useState(false);
     const [editingMaterial, setEditingMaterial] = useState(null);
 
+    // Debug: Log state changes
+    useEffect(() => {
+        console.log('showAddPopup:', showAddPopup);
+    }, [showAddPopup]);
+
+    useEffect(() => {
+        console.log('showEditPopup:', showEditPopup, 'editingMaterial:', editingMaterial);
+    }, [showEditPopup, editingMaterial]);
+
     // Save to localStorage whenever materials change
     useEffect(() => {
         localStorage.setItem('materials', JSON.stringify(materials));
@@ -60,7 +69,10 @@ const ActiveMaterials = () => {
                     <div className="flex justify-between items-center mb-8">
                         <h1 className="text-3xl md:text-5xl text-black/70">Materiales Activos</h1>
                         <button
-                            onClick={() => setShowAddPopup(true)}
+                            onClick={() => {
+                                console.log('Add button clicked, setting showAddPopup to true');
+                                setShowAddPopup(true);
+                            }}
                             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors"
                         >
                             + Nuevo Material
@@ -94,7 +106,10 @@ const ActiveMaterials = () => {
                                                 </div>
                                             </div>
                                             <button
-                                                onClick={() => handleEditClick(material)}
+                                                onClick={() => {
+                                                    console.log('Edit button clicked for material:', material);
+                                                    handleEditClick(material);
+                                                }}
                                                 className="ml-2 p-2 hover:bg-gray-200 rounded transition-colors"
                                                 title="Editar material"
                                             >
@@ -111,16 +126,30 @@ const ActiveMaterials = () => {
 
             {showAddPopup && (
                 <AddMaterialPopup
-                    onClose={setShowAddPopup}
-                    onAdd={handleAddMaterial}
+                    onClose={() => {
+                        console.log('Closing add popup');
+                        setShowAddPopup(false);
+                    }}
+                    onAdd={(newMaterial) => {
+                        console.log('Adding new material:', newMaterial);
+                        handleAddMaterial(newMaterial);
+                        setShowAddPopup(false);
+                    }}
                 />
             )}
 
             {showEditPopup && editingMaterial && (
                 <EditMaterialPopup
-                    onClose={setShowEditPopup}
+                    onClose={() => {
+                        setShowEditPopup(false);
+                        setEditingMaterial(null);
+                    }}
                     material={editingMaterial}
-                    onUpdate={handleEditMaterial}
+                    onUpdate={(updatedMaterial) => {
+                        handleEditMaterial(updatedMaterial);
+                        setShowEditPopup(false);
+                        setEditingMaterial(null);
+                    }}
                 />
             )}
         </NavigationWrapper>

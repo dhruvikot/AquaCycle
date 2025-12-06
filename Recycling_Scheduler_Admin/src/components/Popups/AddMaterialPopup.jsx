@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const AddMaterialPopup = ({ onClose, onAdd }) => {
+  console.log('AddMaterialPopup rendered');
   const [name, setName] = useState('');
   const [category, setCategory] = useState('Plásticos');
   const [color, setColor] = useState('#ffc000');
@@ -21,9 +22,24 @@ const AddMaterialPopup = ({ onClose, onAdd }) => {
 
     // Get the next available ID (find max ID and add 1)
     const existingMaterials = JSON.parse(localStorage.getItem('materials') || '[]');
-    const maxId = existingMaterials.length > 0 
-      ? Math.max(...existingMaterials.map(m => m.id || 0))
-      : 18; // Start from 19 if no materials in storage
+    let maxId = 0;
+    if (existingMaterials.length > 0) {
+      const ids = existingMaterials.map(m => {
+        const id = typeof m.id === 'number' ? m.id : parseInt(m.id) || 0;
+        return id;
+      });
+      maxId = Math.max(...ids);
+    } else {
+      // If no materials, check MATERIALS_LIST for max ID
+      const { MATERIALS_LIST } = require('../../../shared/materials');
+      if (MATERIALS_LIST && MATERIALS_LIST.length > 0) {
+        const ids = MATERIALS_LIST.map(m => {
+          const id = typeof m.id === 'number' ? m.id : parseInt(m.id) || 0;
+          return id;
+        });
+        maxId = Math.max(...ids);
+      }
+    }
     
     const newMaterial = {
       id: maxId + 1,
@@ -34,7 +50,7 @@ const AddMaterialPopup = ({ onClose, onAdd }) => {
     };
 
     onAdd(newMaterial);
-    onClose(false);
+    onClose();
   };
 
   return (
@@ -43,7 +59,7 @@ const AddMaterialPopup = ({ onClose, onAdd }) => {
         <div className="client_info">
           <div className="popup_header">
             <div className="popup_title">Agregar Material</div>
-            <button className="popup_close" onClick={() => onClose(false)}>X</button>
+            <button className="popup_close" onClick={() => onClose()}>X</button>
           </div>
           <div className="popup_field">
             <div className="popup_field_title">Nombre:</div>

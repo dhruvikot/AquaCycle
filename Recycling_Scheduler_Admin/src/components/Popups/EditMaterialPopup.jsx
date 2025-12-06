@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 const EditMaterialPopup = ({ onClose, material, onUpdate }) => {
+  console.log('EditMaterialPopup rendered with material:', material);
   const [name, setName] = useState(material?.name || '');
   const [category, setCategory] = useState(material?.category || 'Plásticos');
   const [color, setColor] = useState(material?.color || '#ffc000');
@@ -27,7 +28,7 @@ const EditMaterialPopup = ({ onClose, material, onUpdate }) => {
     };
 
     onUpdate(updatedMaterial);
-    onClose(false);
+    onClose();
   };
 
   return (
@@ -36,7 +37,7 @@ const EditMaterialPopup = ({ onClose, material, onUpdate }) => {
         <div className="client_info">
           <div className="popup_header">
             <div className="popup_title">Editar Material</div>
-            <button className="popup_close" onClick={() => onClose(false)}>X</button>
+            <button className="popup_close" onClick={() => onClose()}>X</button>
           </div>
           <div className="popup_field">
             <div className="popup_field_title">ID:</div>

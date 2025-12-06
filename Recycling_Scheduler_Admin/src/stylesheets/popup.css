@@ -1,0 +1,154 @@
+/* Popup Styles */
+.popup_body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: auto;
+}
+
+.popup {
+  background-color: white;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.client_info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.popup_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.popup_title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.popup_close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.popup_close:hover {
+  background-color: #f3f4f6;
+  color: #1a1a1a;
+}
+
+.popup_field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.popup_field_title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.popup_field_input {
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.popup_field_input:focus {
+  outline: none;
+  border-color: #0038a8;
+}
+
+.popup_field_input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.popup_add_client_btn {
+  background-color: #0038a8;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.popup_add_client_btn:hover {
+  background-color: #002d87;
+}
+
+.popup_add_client_btn:active {
+  transform: scale(0.98);
+}
+
+.add_location_btn {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 16px;
+}
+
+.add_location_btn:hover {
+  background-color: #059669;
+}
+
+.btn-cancel {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+}
+
+.btn-cancel:hover {
+  background-color: #4b5563;
+}
+
